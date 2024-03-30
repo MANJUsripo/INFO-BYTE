@@ -1,0 +1,79 @@
+import speech_recognition as sr           
+import os
+import webbrowser
+import datetime
+import google.generativeai as genai
+
+
+
+
+def ai(prompt):
+  os.environ["API_KEY"] = "your api key here"
+    text = f"OpenAI response for Prompt: {prompt}\n*****************\n\n"
+    genai.configure(api_key=os.environ["API_KEY"])
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content(prompt)
+
+# Access the generated text based on the actual structure of the response object
+    if hasattr(response, "text"):
+        generated_text = response.text
+        text += generated_text
+    else:
+        print("Unable to retrieve generated text from the response object.")
+
+    
+    if not os.path.exists("OPENAII"):
+        os.mkdir("OPENAII")
+    with open(f"OPENAII/{''.join(prompt.split('intelligence')[1:]).strip() }.txt", "w") as f:
+        f.write(text)
+
+def say(text):
+    os.system(f"say {text}")
+
+def takeCommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = r.listen(source)
+        try:
+            print("Recognizing...")
+            query = r.recognize_google(audio, language="en-in")
+            say(f"User said: {query}")
+            print(f"User said: {query}")
+            return query
+        except Exception as e:
+            print("Some Error Occurred. Sorry from MONA")
+            return ""
+
+if __name__ == '__main__':
+    print('mona is active!')
+    say("Hello, I am MONA.")
+    while True:
+        print("Listening...")
+        query = takeCommand().lower()
+
+        if "open youtube" in query:
+            webbrowser.open("https://www.youtube.com")
+            say("Opening YouTube, sir.")
+        elif "open wikipedia" in query:
+            webbrowser.open("https://www.wikipedia.com")
+            say("Opening Wikipedia, sir.")
+        elif "open google" in query:
+            webbrowser.open("https://www.google.com")
+            say("Opening Google, sir.")
+        elif "open music" in query:
+            musicpath = "/Users/balajipolamarasetti/Downloads/harley.mp3"
+            os.system(f"open {musicpath}")
+        elif "the time" in query:
+            current_time = datetime.datetime.now().strftime("%H:%M")
+            say(f"Sir, the time is {current_time}")
+        elif "open message app" in query:
+            os.system("open /System/Applications/Messages.app")
+        elif "using artificial intelligence" in query:
+            ai(prompt=query)
+        
+            
+        elif "exit" in query or "quit" in query:
+            say("Goodbye!")
+        
+            break
