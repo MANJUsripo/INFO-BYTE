@@ -40,7 +40,7 @@
 </div>
 <script>
 
-const apiKey = "fa2db4748479d3cd8fa0a740938ecdd6";
+const apiKey = " your api key here";
 const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
 
 const searchBox = document.querySelector(".search input");
